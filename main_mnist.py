@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.autograd import Variable
-from models.binarized_modules import  BinarizeLinear,BinarizeConv2d
+from models.binarized_modules import  BinarizeLinear,BinarizeConv2d,myBinarizeLinear
 from models.binarized_modules import  Binarize,HingeLoss
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
@@ -41,14 +41,16 @@ kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 train_loader = torch.utils.data.DataLoader(
     datasets.MNIST('../data', train=True, download=True,
                    transform=transforms.Compose([
-                       transforms.ToTensor(),
-                       transforms.Normalize((0.1307,), (0.3081,))
+                       transforms.ToTensor()
+                       #,
+                       #transforms.Normalize((0.1307,), (0.3081,))
                    ])),
     batch_size=args.batch_size, shuffle=True, **kwargs)
 test_loader = torch.utils.data.DataLoader(
     datasets.MNIST('../data', train=False, transform=transforms.Compose([
-                       transforms.ToTensor(),
-                       transforms.Normalize((0.1307,), (0.3081,))
+                       transforms.ToTensor()
+                       #,
+                       #transforms.Normalize((0.1307,), (0.3081,))
                    ])),
     batch_size=args.test_batch_size, shuffle=True, **kwargs)
 
@@ -57,7 +59,7 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.infl_ratio=3
-        self.fc1 = BinarizeLinear(784, 2048*self.infl_ratio)
+        self.fc1 = myBinarizeLinear(784, 2048*self.infl_ratio)
         self.htanh1 = nn.Hardtanh()
         self.bn1 = nn.BatchNorm1d(2048*self.infl_ratio)
         self.fc2 = BinarizeLinear(2048*self.infl_ratio, 2048*self.infl_ratio)
