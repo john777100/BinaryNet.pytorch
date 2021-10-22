@@ -89,23 +89,22 @@ class myBinarizeLinear(nn.Linear):
         super(myBinarizeLinear, self).__init__(*kargs, **kwargs)
 
     def forward(self, input):
-
-
         input.data = 2 * (input.data*255 - 128)
         x_num = (input.data + 256) / 2  #   1
         bin_input = torch.arange(0, 256, step=1).long().expand(64, 784, 256)
         x_num = x_num.expand(256, 64, 784).reshape(64, 784, 256)
-        bin_input = bin_input <= x_num
+        bin_input = bin_input < x_num
         bin_input = bin_input.int().float() * 2 - 1
         #torch.set_printoptions(threshold=100000000000000)
-        #print(bin_input)
-        #print(x_num.shape, bin_input.shape)
-        if input.size(1) != 784:
-            input.data=Binarize(input.data)
+
         if not hasattr(self.weight,'org'):
             self.weight.org=self.weight.data.clone()
         self.weight.data=Binarize(self.weight.org)
-        out = nn.functional.linear(input, self.weight)
+        #out = nn.functional.linear(input, self.weight)
+        out = nn.functional.linear(bin_input.reshape(64,256,784).reshape(64*256,784), self.weight)
+        out = out.reshape(64,256,-1)
+        out = torch.sum(out, 1) / 2
+
         if not self.bias is None:
             self.bias.org=self.bias.data.clone()
             out += self.bias.view(1, -1).expand_as(out)
