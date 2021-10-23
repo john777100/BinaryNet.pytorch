@@ -90,9 +90,11 @@ class myBinarizeLinear(nn.Linear):
 
     def forward(self, input):
         input.data = input.data.multiply(255).add(-128).multiply(2) #2 * (input.data*255 - 128)
+        batch_size = input.data.shape[0]
+        input_size = input.data.shape[1]
         x_num = input.data.add(256).multiply(0.5) #(input.data + 256) / 2  #   1
-        bin_input = torch.arange(0, 256, step=1).long().expand(64, 784, 256)
-        x_num = x_num.expand(256, 64, 784).permute(1, 2, 0) # x_num.shape = [64, 784, 256]
+        bin_input = torch.arange(0, 256, step=1).long().expand(batch_size, input_size, 256)
+        x_num = x_num.expand(256, batch_size, input_size).permute(1, 2, 0) # x_num.shape = [64, 784, 256]
 
         #print(x_num.get_device())
         x_num = x_num.to('cuda:0')
@@ -106,8 +108,8 @@ class myBinarizeLinear(nn.Linear):
         self.weight.data=Binarize(self.weight.org)
 
         #out = nn.functional.linear(input, self.weight)
-        out = nn.functional.linear(bin_input.permute(0, 2, 1).reshape(64*256, 784), self.weight)
-        out = out.reshape(64, 256, -1)
+        out = nn.functional.linear(bin_input.permute(0, 2, 1).reshape(batch_size*256, input_size), self.weight)
+        out = out.reshape(batch_size, 256, -1)
         out = torch.sum(out, 1) / 2
 
         if not self.bias is None:
