@@ -89,12 +89,16 @@ class myBinarizeLinear(nn.Linear):
         super(myBinarizeLinear, self).__init__(*kargs, **kwargs)
 
     def forward(self, input):
-        input.data = 2 * (input.data*255 - 128)
-        x_num = (input.data + 256) / 2  #   1
+        input.data = input.data.multiply(255).add(-128).multiply(2) #2 * (input.data*255 - 128)
+        x_num = input.data.add(256).multiply(0.5) #(input.data + 256) / 2  #   1
         bin_input = torch.arange(0, 256, step=1).long().expand(64, 784, 256)
         x_num = x_num.expand(256, 64, 784).permute(1, 2, 0) # x_num.shape = [64, 784, 256]
-        bin_input = bin_input < x_num
-        bin_input = bin_input.int().float() * 2 - 1
+
+        #print(x_num.get_device())
+        x_num = x_num.to('cuda:0')
+        bin_input = bin_input.to('cuda:0')
+        bin_input = bin_input.less(x_num)
+        bin_input = bin_input.int().float().multiply(2).add(-1)# * 2 - 1
         #torch.set_printoptions(threshold=100000000000000)
 
         if not hasattr(self.weight,'org'):

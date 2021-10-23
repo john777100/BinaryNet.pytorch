@@ -9,6 +9,9 @@ from torchvision import datasets, transforms
 from torch.autograd import Variable
 from models.binarized_modules import BinarizeLinear,BinarizeConv2d,myBinarizeLinear,testBinarizeLinear
 from models.binarized_modules import  Binarize,HingeLoss
+
+from multiprocessing import freeze_support
+
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
 parser.add_argument('--batch-size', type=int, default=64, metavar='N',
@@ -89,7 +92,7 @@ class Net(nn.Module):
 
 model = Net()
 if args.cuda:
-    torch.cuda.set_device(3)
+    torch.cuda.set_device(0)
     model.cuda()
 
 
@@ -144,9 +147,10 @@ def test():
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
 
-
-for epoch in range(1, args.epochs + 1):
-    train(epoch)
-    test()
-    if epoch%40==0:
-        optimizer.param_groups[0]['lr']=optimizer.param_groups[0]['lr']*0.1
+if __name__ == "__main__":
+	freeze_support()
+	for epoch in range(1, args.epochs + 1):
+		train(epoch)
+		test()
+		if epoch%40==0:
+			optimizer.param_groups[0]['lr']=optimizer.param_groups[0]['lr']*0.1
