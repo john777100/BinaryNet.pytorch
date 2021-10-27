@@ -1,21 +1,21 @@
-`define WEIGHT_COUNT 32
-`define RELU_THRESHOLD `WEIGHT_COUNT/2
+`define KERNEL_SIZE 16
+`define RELU_THRESHOLD `KERNEL_SIZE/2
 
 module xnor_popcount (
 	input						clock,
 	input						reset,
 	input						weight_wr,
 	input 						input_plugin,
-	input	[`WEIGHT_COUNT-1:0] weight_in,
-	input	[`WEIGHT_COUNT-1:0] pixels_in,
+	input	[`KERNEL_SIZE-1:0] weight_in,
+	input	[`KERNEL_SIZE-1:0] pixels_in,
 
 	output	logic				ready_out,
 	output	logic				result_out
 );
 
-	logic [`WEIGHT_COUNT-1:0]			weight_reserve, next_weight_reserve;
-	logic [`WEIGHT_COUNT-1:0]			xnor_result;
-	logic [$clog2(`WEIGHT_COUNT)-1:0]	pop_result;
+	logic [`KERNEL_SIZE-1:0]			weight_reserve, next_weight_reserve;
+	logic [`KERNEL_SIZE-1:0]			xnor_result;
+	logic [$clog2(`KERNEL_SIZE)-1:0]	pop_result;
 	logic								next_result;
 	logic								next_ready;
 
@@ -31,7 +31,7 @@ module xnor_popcount (
 		if (input_plugin) begin
 			next_ready 	= 1;
 			xnor_result = pixels_in ^~ weight_reserve;
-			for (int i = 0; i < `WEIGHT_COUNT; i++) begin
+			for (int i = 0; i < `KERNEL_SIZE; i++) begin
 				pop_result = pop_result + xnor_result[i];
 			end
 			if (pop_result >= RELU_THRESHOLD) begin
