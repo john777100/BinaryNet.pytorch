@@ -89,16 +89,21 @@ class myBinarizeLinear(nn.Linear):
         super(myBinarizeLinear, self).__init__(*kargs, **kwargs)
 
     def forward(self, input):
-        input.data = input.data.multiply(255).add(-128).multiply(2) #2 * (input.data*255 - 128)
         batch_size = input.data.shape[0]
         input_size = input.data.shape[1]
-        x_num = input.data.add(256).multiply(0.5) #(input.data + 256) / 2  #   1
-        bin_input = torch.arange(0, 256, step=1).long().expand(batch_size, input_size, 256)
-        x_num = x_num.expand(256, batch_size, input_size).permute(1, 2, 0) # x_num.shape = [64, 784, 256]
+        input.data = input.data.multiply(255).add(-128) # normalize to -128~127
+        K=3
+        input.data = input.data.divide(2**K) # prune K=3, being -16~15
+        input.data = input.data.multiply(2) # scale to -32~30
+        post_channel_num = int(256/(2**K))
+        x_num = input.data.add(post_channel_num).multiply(0.5) #(input.data + 256)/2 (getting # of 1)
+        bin_input = torch.arange(0, post_channel_num,
+                step=1).long().expand(batch_size, input_size, post_channel_num)
+        x_num = x_num.expand(post_channel_num, batch_size, input_size).permute(1, 2, 0) # x_num.shape = [64, 784, 256]
 
         #print(x_num.get_device())
-        #x_num = x_num.to('cuda:3')
-        #bin_input = bin_input.to('cuda:3')
+        #x_num = x_num.to('cuda:0')
+        #bin_input = bin_input.to('cuda:0')
         bin_input = bin_input.less(x_num)
         bin_input = bin_input.int().float().multiply(2).add(-1)# * 2 - 1
         #torch.set_printoptions(threshold=100000000000000)
@@ -108,8 +113,9 @@ class myBinarizeLinear(nn.Linear):
         self.weight.data=Binarize(self.weight.org)
 
         #out = nn.functional.linear(input, self.weight)
-        out = nn.functional.linear(bin_input.permute(0, 2, 1).reshape(batch_size*256, input_size), self.weight)
-        out = out.reshape(batch_size, 256, -1)
+        out = nn.functional.linear(bin_input.permute(0, 2,
+            1).reshape(batch_size*post_channel_num, input_size), self.weight)
+        out = out.reshape(batch_size, post_channel_num, -1)
         out = torch.sum(out, 1) / 2
 
         if not self.bias is None:
