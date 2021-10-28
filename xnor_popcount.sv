@@ -15,7 +15,7 @@ module xnor_popcount (
 
 	logic [`KERNEL_SIZE-1:0]			weight_reserve, next_weight_reserve;
 	logic [`KERNEL_SIZE-1:0]			xnor_result;
-	logic [$clog2(`KERNEL_SIZE)-1:0]	pop_result;
+	logic [$clog2(`KERNEL_SIZE):0]		pop_result;
 	logic								next_result;
 	logic								next_ready;
 
