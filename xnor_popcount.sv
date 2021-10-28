@@ -1,5 +1,3 @@
-`define KERNEL_SIZE 16
-`define RELU_THRESHOLD `KERNEL_SIZE/2
 
 module xnor_popcount (
 	input						clock,

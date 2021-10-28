@@ -1,0 +1,4 @@
+`define CHANNEL_CNT	256
+`define BIT_WIDTH $clog2(`CHANNEL_CNT)
+`define KERNEL_SIZE 16
+`define RELU_THRESHOLD `KERNEL_SIZE/2
