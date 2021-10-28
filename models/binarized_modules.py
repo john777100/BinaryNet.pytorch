@@ -91,7 +91,11 @@ class myBinarizeLinear(nn.Linear):
     def forward(self, input):
         batch_size = input.data.shape[0]
         input_size = input.data.shape[1]
-        input.data = input.data.multiply(255).add(-128) # normalize to -128~127
+        if input.size(1) != 784:
+            input.data = input.data.multiply(255).add(-128) # normalize to -128~127
+        else:
+            input.data = input.data.multiply(255).add(-128) # normalize to -128~127
+
         K=3
         input.data = input.data.divide(2**K) # prune K=3, being -16~15
         input.data = input.data.multiply(2) # scale to -32~30
