@@ -6,7 +6,7 @@ module binarization_input(
 	always_comb begin
 		pixel_out		= 'b0 - 1;
 		for(int i = 0; i<`KERNEL_SIZE; i++) begin
-			negative_cnt	= (128 - {pixel_in[i][`BIT_WIDTH-1],pixel_in[i]}); // (256 - pixel * 2) >> 1 === 128 - pixel
+			negative_cnt	= (`CHANNEL_CNT/2 - {pixel_in[i][`BIT_WIDTH-1],pixel_in[i]}); // (256 - pixel * 2) >> 1 === 128 - pixel
 			pixel_out[i] = pixel_out[i] >> negative_cnt;
 		end
 	end
