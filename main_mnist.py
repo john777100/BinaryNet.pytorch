@@ -9,7 +9,8 @@ from torchvision import datasets, transforms
 from torch.autograd import Variable
 from models.binarized_modules import BinarizeLinear,BinarizeConv2d,myBinarizeLinear,testBinarizeLinear
 from models.binarized_modules import  Binarize,HingeLoss
-
+import logging
+from utils import *
 from multiprocessing import freeze_support
 
 # Training settings
@@ -127,6 +128,20 @@ def train(epoch):
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
+        
+        
+    train_loss = 0
+    correct = 0
+    for data, target in train_loader:
+        if args.cuda:
+            data, target = data.cuda(), target.cuda()
+        data, target = Variable(data), Variable(target)
+        output = model(data)
+        train_loss += criterion(output, target).item() # sum up batch loss
+        pred = output.data.max(1, keepdim=True)[1] # get the index of the max log-probability
+        correct += pred.eq(target.data.view_as(pred)).cpu().sum()
+    train_acc = 100. * correct / len(train_loader.dataset)
+    return train_acc, train_loss
 
 def test():
     model.eval()
@@ -143,14 +158,26 @@ def test():
             correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 
     test_loss /= len(test_loader.dataset)
+    
+    test_acc = 100. * correct / len(test_loader.dataset)
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
+        test_acc))
+    return test_acc, test_loss
 
 if __name__ == "__main__":
-	freeze_support()
-	for epoch in range(1, args.epochs + 1):
-		train(epoch)
-		test()
-		if epoch%40==0:
-			optimizer.param_groups[0]['lr']=optimizer.param_groups[0]['lr']*0.1
+    freeze_support()
+    setup_logging('mnist_train.log')
+    for epoch in range(1, args.epochs + 1):
+        train_acc, train_loss = train(epoch)
+        test_acc, test_loss = test()
+        logging.info('\n Epoch: {0}\t'
+                     'Training Loss {train_loss:.4f} \t'
+                     'Training Acc {train_acc:.3f}% \t'
+                     'Validation Loss {val_loss:.4f} \t'
+                     'Validation Acc {val_acc:.3f}% \t'
+                     .format(epoch, train_loss=train_loss, train_acc=train_acc,
+                             val_loss=test_loss, val_acc=test_acc))
+        if epoch%40==0:
+            optimizer.param_groups[0]['lr']=optimizer.param_groups[0]['lr']*0.1
+    torch.save(model.state_dict(), 'mnist.pth.tar')
