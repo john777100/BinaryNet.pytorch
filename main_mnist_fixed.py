@@ -65,13 +65,13 @@ class Net(nn.Module):
         self.infl_ratio=3
         self.quant = torch.quantization.QuantStub()
         self.fc1 = nn.Linear(784, 2048*self.infl_ratio)
-        self.htanh1 = nn.Hardtanh()
+        self.relu1 = nn.ReLU()
         self.bn1 = nn.BatchNorm1d(2048*self.infl_ratio)
         self.fc2 = nn.Linear(2048*self.infl_ratio, 2048*self.infl_ratio)
-        self.htanh2 = nn.Hardtanh()
+        self.relu2 = nn.ReLU()
         self.bn2 = nn.BatchNorm1d(2048*self.infl_ratio)
         self.fc3 = nn.Linear(2048*self.infl_ratio, 2048*self.infl_ratio)
-        self.htanh3 = nn.Hardtanh()
+        self.relu3 = nn.ReLU()
         self.bn3 = nn.BatchNorm1d(2048*self.infl_ratio)
         self.fc4 = nn.Linear(2048*self.infl_ratio, 10)
         self.logsoftmax=nn.LogSoftmax()
@@ -83,19 +83,21 @@ class Net(nn.Module):
         x = self.quant(x)
         x = self.fc1(x)
         x = self.bn1(x)
-        x = self.htanh1(x)
+        x = self.relu1(x)
         x = self.fc2(x)
         x = self.bn2(x)
-        x = self.htanh2(x)
+        x = self.relu2(x)
         x = self.fc3(x)
         x = self.drop(x)
         x = self.bn3(x)
-        x = self.htanh3(x)
+        x = self.relu3(x)
         x = self.fc4(x)
         x = self.dequant(x)
         return self.logsoftmax(x)
 
-model = Net()
+model_fp32  = Net()
+model_fused = torch.quantization.fuse_modules(model_fp32,[['fc1', 'relu1'], ['fc2', 'relu2'], ['fc3', 'relu3']])
+model = torch.quantization.prepare_qat(model_fused)
 if args.cuda:
     torch.cuda.set_device(0)
     model.cuda()
@@ -149,6 +151,7 @@ def train(epoch):
 
 def test():
     model.eval()
+    model_int8 = torch.quantization.convert(model)
     test_loss = 0
     correct = 0
     with torch.no_grad():
@@ -156,7 +159,7 @@ def test():
             if args.cuda:
                 data, target = data.cuda(), target.cuda()
             data, target = Variable(data), Variable(target)
-            output = model(data)
+            output = model_int8(data)
             test_loss += criterion(output, target).item() # sum up batch loss
             pred = output.data.max(1, keepdim=True)[1] # get the index of the max log-probability
             correct += pred.eq(target.data.view_as(pred)).cpu().sum()
