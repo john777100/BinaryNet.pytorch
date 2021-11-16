@@ -106,8 +106,11 @@ class myBinarizeLinear(nn.Linear):
         x_num = x_num.expand(post_channel_num, batch_size, input_size).permute(1, 2, 0) # x_num.shape = [64, 784, 256]
 
         #print(x_num.get_device())
-        #x_num = x_num.to('cuda:0')
-        #bin_input = bin_input.to('cuda:0')
+        
+        # Common out if cpu only
+        x_num = x_num.to('cuda:0')
+        bin_input = bin_input.to('cuda:0')
+
         bin_input = bin_input.less(x_num)
         bin_input = bin_input.int().float().multiply(2).add(-1)# * 2 - 1
         #torch.set_printoptions(threshold=100000000000000)
