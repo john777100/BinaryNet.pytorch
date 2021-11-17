@@ -32,7 +32,7 @@ with open("pattern/file_weight.txt",'w') as f:
 		for j in range(INPUT_DIM):
 			f.writelines(str(weight[i,j])+'\n')
 
-with open("pattern/file_x.txt",'w') as f:
+with open("pattern/file_y.txt",'w') as f:
 	for i in range(TESTING_DATA_CNT):
 		for j in range(OUTPUT_DIM):
 			f.writelines(str(value_out[i,j])+'\n')
