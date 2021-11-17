@@ -21,18 +21,18 @@ value_out			= np.where(real_value_out < 0, real_value_out+256, real_value_out)
 
 real_value_out		= np.where(real_value_out < -128, -128, real_value_out)
 
-with open("file_x.txt",'w') as f:
+with open("pattern/file_x.txt",'w') as f:
 	for i in range(TESTING_DATA_CNT):
 		for j in range(INPUT_DIM):
-			f.writelines(value_in[i,j]+'\n')
+			f.writelines(str(value_in[i,j])+'\n')
 
 
-with open("file_weight.txt",'w') as f:
+with open("pattern/file_weight.txt",'w') as f:
 	for i in range(OUTPUT_DIM):
 		for j in range(INPUT_DIM):
-			f.writelines(weight[i,j]+'\n')
+			f.writelines(str(weight[i,j])+'\n')
 
-with open("file_x.txt",'w') as f:
+with open("pattern/file_x.txt",'w') as f:
 	for i in range(TESTING_DATA_CNT):
 		for j in range(OUTPUT_DIM):
-			f.writelines(value_out[i,j]+'\n')
+			f.writelines(str(value_out[i,j])+'\n')
