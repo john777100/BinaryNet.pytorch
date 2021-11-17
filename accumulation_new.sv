@@ -31,7 +31,6 @@ module accumulation (
 			result_o[PARAM_IN_BIT-2:0]  = temp_result[$clog2(PARAM_IN_CNT*PARAM_CH_CNT)-1:PARAM_IN_BIT-1] == {($clog2(PARAM_IN_CNT*PARAM_CH_CNT)-PARAM_IN_BIT+1){1'b0}} 
 										  ? temp_result[PARAM_IN_BIT-2:0]
 										  : {(PARAM_IN_BIT-1){1'b1}};
-
 		end
 	end
 endmodule
