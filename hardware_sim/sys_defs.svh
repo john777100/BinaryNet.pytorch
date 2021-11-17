@@ -1,5 +1,6 @@
+`define TESTING_DATA_CNT 100
 `define BIT_WIDTH 	2
-`define CHANNEL_CNT	2 ** CHANNEL_CNT
+`define CHANNEL_CNT	2 ** BIT_WIDTH
 `define INPUT_DIM	784
 `define OUTPUT_DIM	200
 //`define KERNEL_SIZE 16
