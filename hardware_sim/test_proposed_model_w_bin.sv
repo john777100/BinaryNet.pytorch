@@ -16,6 +16,8 @@ module test_proposed_model_w_bin ();
 
 
 	initial begin
+		$dumpfile("test_proposed_model_w_bin.vcd");
+		$dumpvars(0, dut);
 		error_cnt = 0;
 		file_x 		= $fopen("./pattern/file_x.txt","r");
 		file_y 		= $fopen("./pattern/file_y.txt","r");
