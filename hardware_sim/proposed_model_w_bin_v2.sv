@@ -8,7 +8,7 @@ module proposed_model_w_bin_v2 (
 	logic	[`INPUT_DIM-1:0][`CHANNEL_CNT-1:0]					BI_out;
 	logic	[`OUTPUT_DIM-1:0][`INPUT_DIM-1:0][`CHANNEL_CNT-1:0]	ACC_in_ch;
 	logic	[`OUTPUT_DIM-1:0][`INPUT_DIM-1:0][`BIT_CNT:0]		ACC_in_bit;
-	logic	[`BIT_CNT:0]										sign_extended;
+	logic	[`BIT_CNT+1:0]										ACC_in_bit_temp;
 	assign 	BI_in		= value_in;	
 
 	binarization_input #(.PARAM_IN_CNT(`INPUT_DIM), .PARAM_IN_BIT(`BIT_CNT), .PARAM_CH_CNT(`CHANNEL_CNT)) b0(
@@ -30,9 +30,11 @@ module proposed_model_w_bin_v2 (
 		ACC_in_bit	= 'b0;
 		for(int i = 0; i < `OUTPUT_DIM; i++) begin
 			for(int j = 0; j < `INPUT_DIM; j++) begin
+				ACC_in_bit_temp			= 'b0;
 				for(int k = 0; k < `CHANNEL_CNT; k++) begin
-					ACC_in_bit[i][j]	= ACC_in_ch[i][j][k] ? ACC_in_bit[i][j]+1 : ACC_in_bit[i][j] - 1; 
+					ACC_in_bit_temp	= ACC_in_ch[i][j][k] ? ACC_in_bit_temp + 1 : ACC_in_bit_temp - 1; 
 				end
+				ACC_in_bit[i][j] = ACC_in_bit_temp[`BIT_CNT+1:1];
 			
 			end
 		end
