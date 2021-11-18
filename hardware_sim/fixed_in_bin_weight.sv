@@ -5,11 +5,9 @@ module fixed_in_bin_weight (
 );
 	logic	[`OUTPUT_DIM-1:0][$clog2(`INPUT_DIM * `CHANNEL_CNT)-1:0]		temp_value_out;
 	logic	[$clog2(`INPUT_DIM * `CHANNEL_CNT)-1:0]							to_add;
-	integer																	extend_cnt;
 	always_comb begin
 		temp_value_out	= 'b0;
 		value_out		= 'b0;
-		extend_cnt		= ($clog2(`INPUT_DIM * `CHANNEL_CNT)-`BIT_CNT);
 		for(int i = 0; i < `OUTPUT_DIM; i++) begin
 			for(int j = 0; j < `INPUT_DIM; j++) begin
 				to_add = value_in[j][`BIT_CNT-1] ? 'b0 - 1 : 'b0;

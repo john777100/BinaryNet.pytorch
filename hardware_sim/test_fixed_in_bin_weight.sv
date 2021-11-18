@@ -9,7 +9,7 @@ module test_proposed_model_w_bin ();
 	logic	[`OUTPUT_DIM-1:0][`BIT_CNT-1:0]		value_out;
 	integer	error_cnt, file_x, file_y, file_weight;
 
-	fixed_in_bin_weight dut(
+	fixed_in_bin_weight_v2 dut(
 		.value_in(value_in),
 		.weight(weight),
 		.value_out(value_out)
