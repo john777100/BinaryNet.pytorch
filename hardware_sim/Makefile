@@ -6,8 +6,10 @@ all:	simv
 
 
 
-TESTBENCH = sys_defs.svh test_proposed_model_w_bin.sv
-SIMFILES = binarization_input.sv accumulation_new.sv proposed_model_w_bin.sv
+TESTBENCH = sys_defs.svh test_fixed_in_bin_weight.sv
+SIMFILES = fixed_in_bin_weight.sv
+#TESTBENCH = sys_defs.svh test_proposed_model_w_bin.sv
+#SIMFILES = binarization_input.sv accumulation_new.sv proposed_model_w_bin.sv
 SYNFILES = RS.vg
 
 TCLFILES = synth/RS.tcl
