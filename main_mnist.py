@@ -19,7 +19,7 @@ parser.add_argument('--batch-size', type=int, default=64, metavar='N',
                     help='input batch size for training (default: 256)')
 parser.add_argument('--test-batch-size', type=int, default=100, metavar='N',
                     help='input batch size for testing (default: 1000)')
-parser.add_argument('--epochs', type=int, default=100, metavar='N',
+parser.add_argument('--epochs', type=int, default=50, metavar='N',
                     help='number of epochs to train (default: 10)')
 parser.add_argument('--lr', type=float, default=0.01, metavar='LR',
                     help='learning rate (default: 0.001)')
@@ -167,7 +167,7 @@ def test():
 
 if __name__ == "__main__":
     freeze_support()
-    setup_logging('mnist_train.log')
+    setup_logging('mnist_train_bin.log')
     for epoch in range(1, args.epochs + 1):
         train_acc, train_loss = train(epoch)
         test_acc, test_loss = test()
@@ -180,4 +180,4 @@ if __name__ == "__main__":
                              val_loss=test_loss, val_acc=test_acc))
         if epoch%40==0:
             optimizer.param_groups[0]['lr']=optimizer.param_groups[0]['lr']*0.1
-    torch.save(model.state_dict(), 'mnist.pth.tar')
+    torch.save(model.state_dict(), 'mnist_bin.pth.tar')
