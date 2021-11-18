@@ -1,7 +1,7 @@
 `define TEST_DATA_CNT 50
 `define BIT_CNT 	2
 `define CHANNEL_CNT	4
-`define INPUT_DIM	100
-`define OUTPUT_DIM	100
+`define INPUT_DIM	10
+`define OUTPUT_DIM	10
 //`define KERNEL_SIZE 16
 //`define RELU_THRESHOLD `KERNEL_SIZE/2

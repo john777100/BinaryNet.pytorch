@@ -1,2 +1,20 @@
 
 *.pyc
+csrc
+*simv.daidir/
+sym_simv.daidir
+*.pvl
+*.syn
+*.mr
+command.log
+default.svf
+filenames.log
+*.chk
+*.ddc
+*.rep
+*.vcd
+*.vg
+simv
+syn_simv
+*.out
+ucli.key

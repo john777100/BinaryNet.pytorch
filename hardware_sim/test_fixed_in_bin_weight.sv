@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 module test_proposed_model_w_bin ();
 
 	logic	[`TEST_DATA_CNT-1:0][`INPUT_DIM-1:0][`BIT_CNT-1:0]		x;
@@ -9,7 +8,7 @@ module test_proposed_model_w_bin ();
 	logic	[`OUTPUT_DIM-1:0][`BIT_CNT-1:0]		value_out;
 	integer	error_cnt, file_x, file_y, file_weight;
 
-	proposed_model_w_bin dut(
+	fixed_in_bin_weight dut(
 		.value_in(value_in),
 		.weight(weight),
 		.value_out(value_out)
@@ -17,8 +16,6 @@ module test_proposed_model_w_bin ();
 
 
 	initial begin
-        $dumpfile("proposed_model_w_bin.vcd");
-        $dumpvars(0, dut);
 		error_cnt = 0;
 		file_x 		= $fopen("./pattern/file_x.txt","r");
 		file_y 		= $fopen("./pattern/file_y.txt","r");

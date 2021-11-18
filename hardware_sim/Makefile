@@ -1,5 +1,5 @@
 VCS = SW_VCS=2017.12-SP2-1 vcs -sverilog +vc -Mupdate -line -full64 +define+
-LIB = /afs/umich.edu/class/eecs470/lib/verilog/lec25dscc25.v
+LIB = /afs/umich.edu/class/eecs598a/f21/SAED32_EDK/lib/stdcell_rvt/verilog/saed32nm.v
 
 all:	simv
 	./simv | tee program.out
@@ -8,9 +8,9 @@ all:	simv
 
 TESTBENCH = sys_defs.svh test_proposed_model_w_bin.sv
 SIMFILES = binarization_input.sv accumulation_new.sv proposed_model_w_bin.sv
-SYNFILES = RS.vg
+SYNFILES = proposed_model_w_bin.vg
 
-TCLFILES = synth/RS.tcl
+TCLFILES = synth/bnn.tcl
 
 VTUBER = sys_defs.svh \
 		 ISA.svh \
@@ -21,7 +21,7 @@ VTUBER = sys_defs.svh \
 
 VISFLAGS = -lncurses
 
-ROB.vg: $(SYNFILES) $(TCLFILES)
+proposed_model_w_bin.vg: $(SYNFILES) $(TCLFILES)
 	dc_shell-t -f $(TCLFILES) | tee synth.out
 
 
