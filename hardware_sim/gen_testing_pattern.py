@@ -3,8 +3,8 @@ import numpy as np
 TEST_DATA_CNT	= 50
 BIT_WIDTH 			= 2
 CHANNEL_CNT			= 4
-INPUT_DIM			= 100
-OUTPUT_DIM			= 100
+INPUT_DIM			= 10
+OUTPUT_DIM			= 10
 
 value_up_limit		= CHANNEL_CNT/2-1 ## 1
 value_in			= np.random.randint(CHANNEL_CNT, size=(TEST_DATA_CNT, INPUT_DIM))
