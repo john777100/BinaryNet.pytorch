@@ -1,0 +1,100 @@
+2021-11-18 10:50:50 - INFO - 
+ Epoch: 1	Training Loss 933.2129 	Training Acc 89.890% 	Validation Loss 0.0129 	Validation Acc 89.000% 	
+2021-11-18 10:52:21 - INFO - 
+ Epoch: 2	Training Loss 452.6165 	Training Acc 93.673% 	Validation Loss 0.0056 	Validation Acc 94.000% 	
+2021-11-18 10:53:50 - INFO - 
+ Epoch: 3	Training Loss 362.0512 	Training Acc 94.965% 	Validation Loss 0.0042 	Validation Acc 95.500% 	
+2021-11-18 10:55:18 - INFO - 
+ Epoch: 4	Training Loss 218.9615 	Training Acc 96.022% 	Validation Loss 0.0032 	Validation Acc 96.070% 	
+2021-11-18 10:56:45 - INFO - 
+ Epoch: 5	Training Loss 133.8036 	Training Acc 97.228% 	Validation Loss 0.0020 	Validation Acc 97.030% 	
+2021-11-18 10:58:11 - INFO - 
+ Epoch: 6	Training Loss 144.3959 	Training Acc 97.238% 	Validation Loss 0.0023 	Validation Acc 97.170% 	
+2021-11-18 10:59:40 - INFO - 
+ Epoch: 7	Training Loss 301.9874 	Training Acc 96.253% 	Validation Loss 0.0048 	Validation Acc 96.070% 	
+2021-11-18 11:01:08 - INFO - 
+ Epoch: 8	Training Loss 219.8099 	Training Acc 97.718% 	Validation Loss 0.0038 	Validation Acc 97.340% 	
+2021-11-18 11:02:36 - INFO - 
+ Epoch: 9	Training Loss 218.9665 	Training Acc 97.837% 	Validation Loss 0.0047 	Validation Acc 97.250% 	
+2021-11-18 11:04:05 - INFO - 
+ Epoch: 10	Training Loss 279.4958 	Training Acc 97.753% 	Validation Loss 0.0064 	Validation Acc 97.340% 	
+2021-11-18 11:05:34 - INFO - 
+ Epoch: 11	Training Loss 317.8273 	Training Acc 97.652% 	Validation Loss 0.0073 	Validation Acc 97.320% 	
+2021-11-18 11:07:02 - INFO - 
+ Epoch: 12	Training Loss 433.0554 	Training Acc 97.292% 	Validation Loss 0.0093 	Validation Acc 96.680% 	
+2021-11-18 11:08:31 - INFO - 
+ Epoch: 13	Training Loss 304.0396 	Training Acc 97.882% 	Validation Loss 0.0079 	Validation Acc 97.170% 	
+2021-11-18 11:10:00 - INFO - 
+ Epoch: 14	Training Loss 370.1815 	Training Acc 97.958% 	Validation Loss 0.0093 	Validation Acc 97.330% 	
+2021-11-18 11:11:29 - INFO - 
+ Epoch: 15	Training Loss 526.6427 	Training Acc 97.213% 	Validation Loss 0.0103 	Validation Acc 96.950% 	
+2021-11-18 11:12:56 - INFO - 
+ Epoch: 16	Training Loss 290.8298 	Training Acc 98.328% 	Validation Loss 0.0085 	Validation Acc 97.660% 	
+2021-11-18 11:14:25 - INFO - 
+ Epoch: 17	Training Loss 326.8836 	Training Acc 98.338% 	Validation Loss 0.0091 	Validation Acc 97.650% 	
+2021-11-18 11:15:54 - INFO - 
+ Epoch: 18	Training Loss 484.3367 	Training Acc 97.733% 	Validation Loss 0.0133 	Validation Acc 96.980% 	
+2021-11-18 11:17:22 - INFO - 
+ Epoch: 19	Training Loss 445.6414 	Training Acc 97.943% 	Validation Loss 0.0110 	Validation Acc 97.570% 	
+2021-11-18 11:18:51 - INFO - 
+ Epoch: 20	Training Loss 390.9992 	Training Acc 98.268% 	Validation Loss 0.0117 	Validation Acc 97.520% 	
+2021-11-18 11:20:21 - INFO - 
+ Epoch: 21	Training Loss 459.9516 	Training Acc 97.948% 	Validation Loss 0.0134 	Validation Acc 97.250% 	
+2021-11-18 11:21:49 - INFO - 
+ Epoch: 22	Training Loss 411.4595 	Training Acc 98.192% 	Validation Loss 0.0128 	Validation Acc 97.450% 	
+2021-11-18 11:23:18 - INFO - 
+ Epoch: 23	Training Loss 505.9043 	Training Acc 98.040% 	Validation Loss 0.0132 	Validation Acc 97.320% 	
+2021-11-18 11:24:50 - INFO - 
+ Epoch: 24	Training Loss 462.1435 	Training Acc 98.115% 	Validation Loss 0.0121 	Validation Acc 97.520% 	
+2021-11-18 11:26:20 - INFO - 
+ Epoch: 25	Training Loss 445.2098 	Training Acc 98.232% 	Validation Loss 0.0130 	Validation Acc 97.580% 	
+2021-11-18 11:27:50 - INFO - 
+ Epoch: 26	Training Loss 497.0714 	Training Acc 98.153% 	Validation Loss 0.0148 	Validation Acc 97.380% 	
+2021-11-18 11:29:20 - INFO - 
+ Epoch: 27	Training Loss 391.4293 	Training Acc 98.477% 	Validation Loss 0.0148 	Validation Acc 97.500% 	
+2021-11-18 11:30:49 - INFO - 
+ Epoch: 28	Training Loss 585.8540 	Training Acc 98.032% 	Validation Loss 0.0179 	Validation Acc 96.970% 	
+2021-11-18 11:32:16 - INFO - 
+ Epoch: 29	Training Loss 431.9296 	Training Acc 98.355% 	Validation Loss 0.0133 	Validation Acc 97.760% 	
+2021-11-18 11:33:46 - INFO - 
+ Epoch: 30	Training Loss 594.1379 	Training Acc 98.105% 	Validation Loss 0.0196 	Validation Acc 96.930% 	
+2021-11-18 11:35:15 - INFO - 
+ Epoch: 31	Training Loss 721.3200 	Training Acc 97.753% 	Validation Loss 0.0190 	Validation Acc 97.190% 	
+2021-11-18 11:36:45 - INFO - 
+ Epoch: 32	Training Loss 594.8336 	Training Acc 97.985% 	Validation Loss 0.0163 	Validation Acc 97.350% 	
+2021-11-18 11:38:15 - INFO - 
+ Epoch: 33	Training Loss 544.9468 	Training Acc 98.300% 	Validation Loss 0.0165 	Validation Acc 97.480% 	
+2021-11-18 11:39:47 - INFO - 
+ Epoch: 34	Training Loss 652.3724 	Training Acc 97.922% 	Validation Loss 0.0194 	Validation Acc 96.810% 	
+2021-11-18 11:41:17 - INFO - 
+ Epoch: 35	Training Loss 1040.4172 	Training Acc 97.120% 	Validation Loss 0.0257 	Validation Acc 96.560% 	
+2021-11-18 11:42:47 - INFO - 
+ Epoch: 36	Training Loss 751.6349 	Training Acc 97.795% 	Validation Loss 0.0184 	Validation Acc 97.390% 	
+2021-11-18 11:44:18 - INFO - 
+ Epoch: 37	Training Loss 608.9033 	Training Acc 98.160% 	Validation Loss 0.0183 	Validation Acc 97.280% 	
+2021-11-18 11:45:49 - INFO - 
+ Epoch: 38	Training Loss 603.6449 	Training Acc 98.167% 	Validation Loss 0.0195 	Validation Acc 97.290% 	
+2021-11-18 11:47:21 - INFO - 
+ Epoch: 39	Training Loss 736.2828 	Training Acc 97.968% 	Validation Loss 0.0230 	Validation Acc 97.050% 	
+2021-11-18 11:48:53 - INFO - 
+ Epoch: 40	Training Loss 701.3878 	Training Acc 97.963% 	Validation Loss 0.0235 	Validation Acc 96.980% 	
+2021-11-18 11:50:22 - INFO - 
+ Epoch: 41	Training Loss 740.6662 	Training Acc 97.957% 	Validation Loss 0.0236 	Validation Acc 97.020% 	
+2021-11-18 11:51:53 - INFO - 
+ Epoch: 42	Training Loss 755.7716 	Training Acc 97.882% 	Validation Loss 0.0227 	Validation Acc 97.150% 	
+2021-11-18 11:53:24 - INFO - 
+ Epoch: 43	Training Loss 741.8773 	Training Acc 97.942% 	Validation Loss 0.0232 	Validation Acc 96.950% 	
+2021-11-18 11:54:55 - INFO - 
+ Epoch: 44	Training Loss 714.8489 	Training Acc 97.973% 	Validation Loss 0.0233 	Validation Acc 96.970% 	
+2021-11-18 11:56:27 - INFO - 
+ Epoch: 45	Training Loss 735.3005 	Training Acc 97.920% 	Validation Loss 0.0240 	Validation Acc 96.960% 	
+2021-11-18 11:57:57 - INFO - 
+ Epoch: 46	Training Loss 759.6329 	Training Acc 97.977% 	Validation Loss 0.0218 	Validation Acc 97.230% 	
+2021-11-18 11:59:27 - INFO - 
+ Epoch: 47	Training Loss 739.1947 	Training Acc 97.985% 	Validation Loss 0.0245 	Validation Acc 96.880% 	
+2021-11-18 12:00:55 - INFO - 
+ Epoch: 48	Training Loss 741.8838 	Training Acc 97.902% 	Validation Loss 0.0236 	Validation Acc 97.020% 	
+2021-11-18 12:02:25 - INFO - 
+ Epoch: 49	Training Loss 766.3585 	Training Acc 97.940% 	Validation Loss 0.0246 	Validation Acc 96.860% 	
+2021-11-18 12:03:53 - INFO - 
+ Epoch: 50	Training Loss 750.4982 	Training Acc 97.920% 	Validation Loss 0.0219 	Validation Acc 97.150% 	
