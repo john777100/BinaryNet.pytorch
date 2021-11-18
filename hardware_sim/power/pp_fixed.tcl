@@ -9,7 +9,7 @@ set power_enable_analysis "true"
 #####################################################
 #Read design data & technology
 #####################################################
-source "./envset.tcl"
+source "./envset_fixed.tcl"
 
 set_app_var link_path $LINK_PATH
 

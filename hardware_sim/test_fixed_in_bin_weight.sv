@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module test_proposed_model_w_bin ();
 
 	logic	[`TEST_DATA_CNT-1:0][`INPUT_DIM-1:0][`BIT_CNT-1:0]		x;
@@ -16,6 +17,8 @@ module test_proposed_model_w_bin ();
 
 
 	initial begin
+        $dumpfile("fixed_in_bin_weight.vcd");
+        $dumpvars(0, dut);
 		error_cnt = 0;
 		file_x 		= $fopen("./pattern/file_x.txt","r");
 		file_y 		= $fopen("./pattern/file_y.txt","r");

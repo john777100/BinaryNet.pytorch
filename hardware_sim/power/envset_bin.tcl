@@ -3,7 +3,7 @@
 #####################################################
 
 set CURRENT_PATH [pwd]
-set TOP_DESIGN fixed_in_bin_weight
+set TOP_DESIGN proposed_model_w_bin
 
 ## Add libraries below:
 set search_path [ list "/afs/umich.edu/class/eecs598a/f21/SAED32_EDK/lib/stdcell_rvt/db_ccs"]
@@ -14,7 +14,7 @@ set LINK_PATH [concat  "*" $target_library]
 set SDC_PATH      "$CURRENT_PATH/.."
 set STRIP_PATH    test_proposed_model_w_bin/dut
 
-set ACTIVITY_FILE ../fixed_in_bin_weight.vcd
+set ACTIVITY_FILE ../proposed_model_w_bin.vcd
 
 ######## Timing Sections ########
 set START_TIME 0

@@ -1,6 +1,13 @@
 pp:
-	tclsh ./envset.tcl
+	tclsh ./envset_bin.tcl
+	cp ./envset_bin.tcl ./envset.tcl
 	pt_shell -f pp.tset.tcl  | tee pp.log
+
+pp_fixed:
+	tclsh ./envset_fixed.tcl
+	cp ./envset_fixed.tcl ./envset.tcl
+	pt_shell -f pp.tset.tcl  | tee pp_fixed.log
+
 clean:
 	rm -f *.log.*
 	rm -f *.fsdb.*

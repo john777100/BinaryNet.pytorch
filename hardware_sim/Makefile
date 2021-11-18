@@ -4,6 +4,8 @@ LIB = /afs/umich.edu/class/eecs598a/f21/SAED32_EDK/lib/stdcell_rvt/verilog/saed3
 all:	simv
 	./simv | tee program.out
 
+fixed: fixed_simv
+	./fixed_simv | tee fixed_program.out
 
 
 TESTBENCH = sys_defs.svh test_proposed_model_w_bin.sv
@@ -11,6 +13,11 @@ SIMFILES = binarization_input.sv accumulation_new.sv proposed_model_w_bin.sv
 SYNFILES = proposed_model_w_bin.vg
 
 TCLFILES = synth/bnn.tcl
+
+FIXED_TB = sys_defs.svh test_fixed_in_bin_weight.sv
+FIXED_SIM = fixed_in_bin_weight.sv
+FIXED_SYN = fixed_in_bin_weight.vg
+FIXED_TCL = synth/fixed.tcl
 
 VTUBER = sys_defs.svh \
 		 ISA.svh \
@@ -22,12 +29,16 @@ VTUBER = sys_defs.svh \
 VISFLAGS = -lncurses
 
 proposed_model_w_bin.vg: $(SYNFILES) $(TCLFILES)
-	dc_shell-t -f $(TCLFILES) | tee synth.out
+	dc_shell-t -f $(FIXED_TCL) | tee synth.out
 
+fixed_in_bin.vg: $(FIXED_SYN) $(TCLFILES)
+	dc_shell-t -f $(FIXED_TCL) | tee fixed_synth.out
 
 #####
 # Should be no need to modify after here
 #####
+
+## Binary
 simv:	$(SIMFILES) $(TESTBENCH)
 	$(VCS) $(TESTBENCH) $(SIMFILES) -o simv
 
@@ -45,6 +56,25 @@ syn_simv:	$(SYNFILES) $(TESTBENCH)
 
 syn:	syn_simv
 	./syn_simv | tee syn_program.out
+
+## Fixed point
+fixed_simv:	$(FIXED_SIM) $(FIXED_TB)
+	$(VCS) $(FIXED_TB) $(FIXED_SIM) -o simv
+
+fixed_dve:	$(FIXED_SIM) $(FIXED_TB) 
+	$(VCS) +memcbk $(FIXED_TB) $(FIXED_SIM) -o dve -R -gui
+
+fixed_synth: $(FIXED_SIM) $(TCLFILES)
+	dc_shell-t -f $(TCLFILES) | tee fixed_synth.out
+
+
+fixed_syn_simv:	$(FIXED_SYN) $(FIXED_TB)
+	$(VCS) $(FIXED_TB) $(FIXED_SYN) $(LIB) -o fixed_syn_simv
+
+fixed_syn:	fixed_syn_simv
+	./fixed_syn_simv | tee fixed_syn_program.out
+
+## End of Fixed point
 
 vis_simv: $(SIMFILES) $(VTUBER)
 	$(VCS) $(VISFLAGS) $(VTUBER) $(SIMFILES) -o vis_simv
