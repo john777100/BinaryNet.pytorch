@@ -1,11 +1,11 @@
 module test_proposed_model_w_bin ();
 
-	logic	[`TESTING_DATA_CNT-1:0][`INPUT_DIM-1:0][`BIT_WIDTH-1:0]		x;
+	logic	[`TEST_DATA_CNT-1:0][`INPUT_DIM-1:0][`BIT_CNT-1:0]		x;
 	logic	[`OUTPUT_DIM-1:0][`INPUT_DIM-1:0]							weight;
-	logic	[`TESTING_DATA_CNT-1:0][`OUTPUT_DIM-1:0][`BIT_WIDTH-1:0]	y;
+	logic	[`TEST_DATA_CNT-1:0][`OUTPUT_DIM-1:0][`BIT_CNT-1:0]	y;
 
-	logic	[`INPUT_DIM-1:0][`BIT_WIDTH-1:0]		value_in;
-	logic	[`OUTPUT_DIM-1:0][`BIT_WIDTH-1:0]		value_out;
+	logic	[`INPUT_DIM-1:0][`BIT_CNT-1:0]		value_in;
+	logic	[`OUTPUT_DIM-1:0][`BIT_CNT-1:0]		value_out;
 	integer	error_cnt, file_x, file_y, file_weight;
 
 	proposed_model_w_bin dut(
@@ -17,9 +17,9 @@ module test_proposed_model_w_bin ();
 
 	initial begin
 		error_cnt = 0;
-		file_x 		= $fopen("fp_x.txt","r");
-		file_y 		= $fopen("y.txt","r");
-		file_weight = $fopen("weight.txt","r");
+		file_x 		= $fopen("./pattern/file_x.txt","r");
+		file_y 		= $fopen("./pattern/file_y.txt","r");
+		file_weight = $fopen("./pattern/file_weight.txt","r");
 		
 		for(int i = 0; i < `TEST_DATA_CNT; i++) begin
 			for(int j = 0; j < `INPUT_DIM; j++) begin
@@ -43,15 +43,16 @@ module test_proposed_model_w_bin ();
 		$fclose(file_y);
 		$fclose(file_weight);
 
-		for(int i = 0; i < TESTING_DATA_CNT; i++) begin
+		for(int i = 0; i < `TEST_DATA_CNT; i++) begin
 			value_in = x[i];
-			#10
-			if(value_out != y[i])
+			#10;
+			if(value_out != y[i]) begin
 				error_cnt ++;
-			#90
+			end
+			#90;
 		end
-		$display("Total %d error in %d testing data",error_cnt,`TESTING_DATA_CNT);
-		$finish
+		$display("Total %d error in %d testing data",error_cnt,`TEST_DATA_CNT);
+		$finish;
 	end
 
 
