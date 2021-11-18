@@ -1,0 +1,65 @@
+#####################################################
+#Enable power analysis
+#####################################################
+set power_enable_analysis "true"
+#####################################################
+#Perform vector analysis
+#####################################################
+#write_activity_waveforms
+#####################################################
+#Read design data & technology
+#####################################################
+source "./envset.tcl"
+
+set_app_var link_path $LINK_PATH
+
+read_verilog "$SDC_PATH/$TOP_DESIGN.vg"
+list_design
+current_design $TOP_DESIGN
+link
+#read_sdc "$SDC_PATH/$TOP_DESIGN.sdc"
+
+set power_model_preference "ccs"
+#####################################################
+#Specify variables
+#####################################################
+#set_operating_conditions 
+set power_limit_extrapolation_range "false"
+#####################################################
+#Perform timing analysis
+#####################################################
+update_timing
+#####################################################
+#Check for potential errors that might affect accuracy
+#####################################################
+check_power
+#####################################################
+#Select power analysis mode
+#####################################################
+#set_app_var power_analysis_mode "averaged"
+set_app_var power_analysis_mode "time_based"
+set_host_options -max_cores 4
+#####################################################
+#Specify switching activity data
+#####################################################
+#set_switching_activity
+read_vcd -strip_path $STRIP_PATH $ACTIVITY_FILE -time { @START_TIME @END_TIME}
+#saif(switching activity interface) : only in averaged power analysis mode
+#vcd (verilog change dump)          : both
+#fsdb(fast switching data dump)     : both
+report_switching_activity -list_not_annotated
+#####################################################
+#Specify options for power analysis
+#####################################################
+set_power_analysis_options
+#####################################################
+#Perform power analysis
+#####################################################
+update_power
+#####################################################
+#Generate report
+#####################################################
+report_power -hier -nosplit -verbose > "syscluster_INV_power.rpt"
+
+report_units
+quit

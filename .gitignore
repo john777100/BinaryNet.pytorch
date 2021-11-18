@@ -18,3 +18,7 @@ simv
 syn_simv
 *.out
 ucli.key
+*.log
+*.tset.tcl
+*.fsdb
+*.rpt
