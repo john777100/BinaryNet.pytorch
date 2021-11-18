@@ -3,7 +3,7 @@
 #####################################################
 
 set CURRENT_PATH [pwd]
-set TOP_DESIGN proposed_model_w_bin
+set TOP_DESIGN proposed_model_w_bin_v2
 
 ## Add libraries below:
 set search_path [ list "/afs/umich.edu/class/eecs598a/f21/SAED32_EDK/lib/stdcell_rvt/db_ccs"]

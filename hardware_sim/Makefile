@@ -9,8 +9,8 @@ fixed: fixed_simv
 
 
 TESTBENCH = sys_defs.svh test_proposed_model_w_bin.sv
-SIMFILES = binarization_input.sv accumulation_new.sv proposed_model_w_bin.sv
-SYNFILES = proposed_model_w_bin.vg
+SIMFILES = binarization_input.sv accumulation_w_add_1.sv proposed_model_w_bin_v2.sv
+SYNFILES = proposed_model_w_bin_v2.vg
 
 TCLFILES = synth/bnn.tcl
 
@@ -28,8 +28,8 @@ VTUBER = sys_defs.svh \
 
 VISFLAGS = -lncurses
 
-proposed_model_w_bin.vg: $(SYNFILES) $(TCLFILES)
-	dc_shell-t -f $(FIXED_TCL) | tee synth.out
+proposed_model_w_bin_v2.vg: $(SYNFILES) $(TCLFILES)
+	dc_shell-t -f $(TCLFILES) | tee synth.out
 
 fixed_in_bin.vg: $(FIXED_SYN) $(TCLFILES)
 	dc_shell-t -f $(FIXED_TCL) | tee fixed_synth.out
