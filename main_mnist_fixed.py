@@ -12,16 +12,17 @@ from models.binarized_modules import  Binarize,HingeLoss
 import logging
 from utils import *
 from multiprocessing import freeze_support
+import copy
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
 parser.add_argument('--batch-size', type=int, default=64, metavar='N',
                     help='input batch size for training (default: 256)')
 parser.add_argument('--test-batch-size', type=int, default=100, metavar='N',
-                    help='input batch size for testing (default: 1000)')
-parser.add_argument('--epochs', type=int, default=100, metavar='N',
-                    help='number of epochs to train (default: 10)')
-parser.add_argument('--lr', type=float, default=0.01, metavar='LR',
+                    help='input batch size for testing (default: 100)')
+parser.add_argument('--epochs', type=int, default=30, metavar='N',
+                    help='number of epochs to train (default: 20)')
+parser.add_argument('--lr', type=float, default=0.005, metavar='LR',
                     help='learning rate (default: 0.001)')
 parser.add_argument('--momentum', type=float, default=0.5, metavar='M',
                     help='SGD momentum (default: 0.5)')
@@ -59,55 +60,51 @@ test_loader = torch.utils.data.DataLoader(
     batch_size=args.test_batch_size, shuffle=True, **kwargs)
 
 
+
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.infl_ratio=3
+        num_hidden = 256
         self.quant = torch.quantization.QuantStub()
-        self.fc1 = nn.Linear(784, 2048*self.infl_ratio)
+        self.fc1 = nn.Linear(784, num_hidden)
         self.relu1 = nn.ReLU()
-        self.bn1 = nn.BatchNorm1d(2048*self.infl_ratio)
-        self.fc2 = nn.Linear(2048*self.infl_ratio, 2048*self.infl_ratio)
+        self.fc2 = nn.Linear(num_hidden, num_hidden)
         self.relu2 = nn.ReLU()
-        self.bn2 = nn.BatchNorm1d(2048*self.infl_ratio)
-        self.fc3 = nn.Linear(2048*self.infl_ratio, 2048*self.infl_ratio)
+        self.fc3 = nn.Linear(num_hidden, num_hidden)
         self.relu3 = nn.ReLU()
-        self.bn3 = nn.BatchNorm1d(2048*self.infl_ratio)
-        self.fc4 = nn.Linear(2048*self.infl_ratio, 10)
+        self.fc4 = nn.Linear(num_hidden, 10)
         self.logsoftmax=nn.LogSoftmax()
-        self.drop=nn.Dropout(0.5)
+        self.drop=nn.Dropout(0.2)
         self.dequant = torch.quantization.DeQuantStub()
 
     def forward(self, x):
-        x = x.view(-1, 28*28)
         x = self.quant(x)
+        x = x.view(-1, 28*28)
         x = self.fc1(x)
-        x = self.bn1(x)
         x = self.relu1(x)
         x = self.fc2(x)
-        x = self.bn2(x)
         x = self.relu2(x)
         x = self.fc3(x)
-        x = self.drop(x)
-        x = self.bn3(x)
         x = self.relu3(x)
         x = self.fc4(x)
         x = self.dequant(x)
-        return self.logsoftmax(x)
+        x = self.logsoftmax(x)
+        return x
 
-model_fp32  = Net()
-model_fused = torch.quantization.fuse_modules(model_fp32,[['fc1', 'relu1'], ['fc2', 'relu2'], ['fc3', 'relu3']])
-model = torch.quantization.prepare_qat(model_fused)
-if args.cuda:
-    torch.cuda.set_device(0)
-    model.cuda()
-
+model = Net()
+model.qconfig = torch.quantization.get_default_qat_qconfig('fbgemm')
+model = torch.quantization.fuse_modules(model,[['fc1', 'relu1'],['fc2', 'relu2'],['fc3', 'relu3']])
+model = torch.quantization.prepare_qat(model)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
 
 def train(epoch):
+    if args.cuda:
+        torch.device("cuda")
+        torch.cuda.set_device(0)
+        model.cuda()
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         if args.cuda:
@@ -151,13 +148,14 @@ def train(epoch):
 
 def test():
     model.eval()
-    model_int8 = torch.quantization.convert(model)
+    torch.device("cpu")
+    md = copy.deepcopy(model)
+    md.cpu()
+    model_int8 = torch.quantization.convert(md)
     test_loss = 0
     correct = 0
     with torch.no_grad():
         for data, target in test_loader:
-            if args.cuda:
-                data, target = data.cuda(), target.cuda()
             data, target = Variable(data), Variable(target)
             output = model_int8(data)
             test_loss += criterion(output, target).item() # sum up batch loss
@@ -174,7 +172,7 @@ def test():
 
 if __name__ == "__main__":
     freeze_support()
-    setup_logging('mnist_train.log')
+    setup_logging('mnist_train_fixed.log')
     for epoch in range(1, args.epochs + 1):
         train_acc, train_loss = train(epoch)
         test_acc, test_loss = test()
@@ -185,6 +183,6 @@ if __name__ == "__main__":
                      'Validation Acc {val_acc:.3f}% \t'
                      .format(epoch, train_loss=train_loss, train_acc=train_acc,
                              val_loss=test_loss, val_acc=test_acc))
-        if epoch%40==0:
+        if epoch%5==0:
             optimizer.param_groups[0]['lr']=optimizer.param_groups[0]['lr']*0.1
-    torch.save(model.state_dict(), 'mnist.pth.tar')
+    torch.save(model.state_dict(), 'mnist_fixed.pth.tar')
