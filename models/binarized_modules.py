@@ -96,9 +96,9 @@ class myBinarizeLinear(nn.Linear):
         else:
             input.data = input.data.multiply(255).add(-128) # normalize to -128~127
 
-        K=3
-        input.data = input.data.divide(2**K) # prune K=3, being -16~15
-        input.data = input.data.multiply(2) # scale to -32~30
+        K=5
+        input.data = input.data.divide(2**(K-1)) # prune K=3, being -16~15
+        # input.data = input.data.multiply(2) # scale to -32~30
         post_channel_num = int(256/(2**K))
         x_num = input.data.add(post_channel_num).multiply(0.5) #(input.data + 256)/2 (getting # of 1)
         bin_input = torch.arange(0, post_channel_num,
