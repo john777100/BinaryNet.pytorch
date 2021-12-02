@@ -1,23 +1,23 @@
 module fp_PE
-#(
-    parameter DATAWIDTH = 8
-)
 (    
     input clk,
     input rst,
-    input signed [DATAWIDTH-1:0] INPUT,
-    input signed [DATAWIDTH-1:0] W,
-    output logic signed [DATAWIDTH-1:0] S
+    input signed [`FP_WIDTH-1:0] INPUT,
+    input signed [`FP_WIDTH-1:0] W,
+    input [$clog2(`ACC_WIDTH)-1:0] shift,
+    output logic signed [`FP_WIDTH-1:0] S
 );
     
-    logic signed [2*DATAWIDTH-1:0] partial_mult;
+    logic signed [2*`FP_WIDTH-1:0] partial_mult;
+    logic signed [`ACC_WIDTH-1:0] acc;
     assign partial_mult = INPUT * W;
+    assign S = acc >> shift;
 
     always_ff @(posedge clk) begin
         if(!rst)
-            S <= #1 partial_mult;
+            acc <= #1 partial_mult;
         else
-            S <= #1 S + partial_mult;
+            acc <= #1 S + partial_mult;
     end
 endmodule
 
@@ -25,20 +25,22 @@ module fp_fcl
 (
     input clk,
     input rst,
-    input  signed [7:0] INPUT,
-    input  signed [`FP_PARALLEL-1:0][7:0] W,
-    output signed [`FP_PARALLEL-1:0][7:0] OUTPUT
+    input  signed [`FP_WIDTH-1:0] INPUT,
+    input  signed [`FP_PARALLEL-1:0][`FP_WIDTH-1:0] W,
+    input [$clog2(4*`FP_WIDTH)-1:0] shift,
+    output signed [`FP_PARALLEL-1:0][`FP_WIDTH-1:0] OUTPUT
 );
     
     genvar i;
     generate
         for(i = 0; i < `FP_PARALLEL; i++) begin
-            fp_PE #(.DATAWIDTH(8)) PE (
+            fp_PE  PE (
                 .clk(clk),
                 .rst(rst),
                 .INPUT(INPUT),
                 .W(W[i]),
-                .S(OUTPUT[i])
+                .shift(shift),
+		.S(OUTPUT[i])
             );
         end
     endgenerate
