@@ -1,85 +1,86 @@
 `timescale 1ns / 1ps
-module tb_fp_fcl ();
 
+module tb_fcl_fp ();
 	logic clk;
     logic rst;
     logic [`FP_WIDTH-1:0] INPUT;
-    logic [`PARALLEL-1:0][`FP_WIDTH-1:0] W;
-    logic [`PARALLEL-1:0][`FP_WIDTH-1:0] OUTPUT;
-    logic [`FP_MODEL_WIDTH-1:0][`FP_WIDTH-1:0] hidden_neuron, pre_neuron;
-	
-    int [3:0] num_neuron;
+    logic [`FP_PARALLEL-1:0][`FP_WIDTH-1:0] W;
+    logic [`FP_PARALLEL-1:0][`FP_WIDTH-1:0] OUTPUT;
+    logic [`FP_MODEL_WIDTH/`FP_PARALLEL-1:0][`FP_PARALLEL-1:0][`FP_WIDTH-1:0] hidden_neuron;
+    logic [`FP_MODEL_WIDTH-1:0][`FP_WIDTH-1:0] pre_neuron;
+    logic [$clog2(`ACC_WIDTH)-1:0] shift;
+    logic	[`TEST_DATA_CNT-1:0][`INPUT_DIM-1:0][`BIT_CNT-1:0]		x;
+	logic	[3303:0][`FP_PARALLEL-1:0][`FP_WIDTH-1:0]                  weight;
+	logic	[`TEST_DATA_CNT-1:0][`OUTPUT_DIM-1:0][`BIT_CNT-1:0]	    y;
+    integer num_neuron  [0:4] = '{784, 16, 16, 16, 10}; // Model Config
     integer	error_cnt, file_x, file_y, file_weight;
+    int i, layer, out, in, clk_num;
 
-	fp_fcl dut(
+	fcl_fp #(.DATAWIDTH(`FP_WIDTH), .PARALLEL_NUM(`FP_PARALLEL)) dut(
 		.clk(clk),
         .rst(rst),
         .INPUT(INPUT),
         .W(W),
+        .shift(shift),
         .OUTPUT(OUTPUT)
 	);
 
     always begin
-        clk = #(`FP_CLOCK) ~clk;
+        #(`FP_CLOCK/2);
+        clk = ~clk;
+        if(clk) clk_num ++;
     end
 
 	initial begin
         $dumpfile("fcl_fp.vcd");
         $dumpvars(0, dut);
-		error_cnt = 0;
+	error_cnt = 0;
+	clk_num = 0;
         clk = 0;
-		file_x 		= $fopen("./pattern/file_x.txt","r");
-		file_y 		= $fopen("./pattern/file_y.txt","r");
-		file_weight = $fopen("./pattern/file_weight.txt","r");
-
-        // Model Config
-        num_neuron = {28, 16, 16, 16, 10};
+	file_x 		= $fopen("./pattern/file_x.txt","r");
+	file_y 		= $fopen("./pattern/file_y.txt","r");
+	file_weight = $fopen("./pattern/file_weight.txt","r");
 		
-		for(int i = 0; i < `TEST_DATA_CNT; i++) begin
-			for(int j = 0; j < `INPUT_DIM; j++) begin
-				$fscanf(file_x,"%d",x[i][j]);
-			end
-		end
+	//	for(int i = 0; i < `TEST_DATA_CNT; i++) begin
+	//		for(int j = 0; j < `INPUT_DIM; j++) begin
+	//			$fscanf(file_x,"%d",x[i][j]);
+	//		end
+	//	end
 
-		for(int i = 0; i < `OUTPUT_DIM; i++) begin
-			for(int j = 0; j < `INPUT_DIM; j++) begin
-				$fscanf(file_weight,"%b",weight[i][j]);
-			end
-		end
+	//	for(int i = 0; i < `TEST_DATA_CNT; i++) begin
+	//		for(int j = 0; j < `OUTPUT_DIM; j++) begin
+	//			$fscanf(file_y,"%d",y[i][j]);
+	//		end
+	//	end
 
-		for(int i = 0; i < `TEST_DATA_CNT; i++) begin
-			for(int j = 0; j < `OUTPUT_DIM; j++) begin
-				$fscanf(file_y,"%d",y[i][j]);
-			end
-		end
+	//	$fclose(file_x);
+	//	$fclose(file_y);
 
-		$fclose(file_x);
-		$fclose(file_y);
-		$fclose(file_weight);
-
-        int w_idx = 0;
-
-		for(int i = 0; i < `TEST_DATA_CNT; i++) begin
-            pre_neuron[num_neuron[0]-1:0] = x[i];
-            for(int layer = 1; layer < num_neuron.size; layer++) begin // loop through layer
-                reset = 0;
-                for(int out = 0; out < num_neuron[layer]; out = out+`PARALLEL) begin // loop through output neuron
-                    for(int in = 0; in < num_neuron[layer-1]; in++ ) begin // loop through input neuron
+	for(i = 0; i < `TEST_DATA_CNT; i++) begin
+            for(int l = 0; l < num_neuron[0]; l++) pre_neuron[l] =  $urandom;
+            for(layer = 1; layer < $size(num_neuron); layer++) begin // loop through layer
+                rst = 0;
+                shift = $urandom;
+                for(out = 0; out < num_neuron[layer]/`FP_PARALLEL; out ++) begin // loop through output neuron
+                    for(in = 0; in < num_neuron[layer-1]; in++) begin // loop through input neuron
                         INPUT = pre_neuron[in];
-                        W = weights[w_idx+`PARALLEL-1: w_idx];
-                        if(!reset) begin
+                        for(int w = 0; w < `FP_PARALLEL; w++) begin
+                            // $fscanf(file_weight, "%b", W[w]);
+                            W[w] = $urandom;
+                        end
+                        if(!rst) begin
                             @(negedge clk);
-                            reset = 1;
+                            rst = 1;
                         end
                         @(posedge clk);
-                        w_idx = w_idx + `PARALLEL;
                     end
-                    hidden_neuron[out+`PARALLEL-1:out] = OUTPUT;
+                    hidden_neuron[out] = OUTPUT;
                 end
                 pre_neuron = hidden_neuron;
             end
 		end
 		$display("Total %d error in %d testing data",error_cnt,`TEST_DATA_CNT);
+		$fclose(file_weight);
 		$finish;
 	end
 

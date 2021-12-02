@@ -10,10 +10,10 @@
 #/* new design                                              */
 #/***********************************************************/
 
-analyze -library work -f sverilog [list "sys_defs.svh" "fcl_fp.sv"]
-elaborate fcl_fp -library work
-set design_name fcl_fp 
-set clock_name clk
+analyze -library work -f sverilog [list "sys_defs.svh" "binarization_input.sv"]
+elaborate binarization_input -library work
+set design_name binarization_input
+set clock_name clock
 set reset_name reset
 set CLK_PERIOD 10
 

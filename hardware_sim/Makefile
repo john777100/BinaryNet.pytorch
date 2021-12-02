@@ -14,9 +14,16 @@ SYNFILES = proposed_model_w_bin_v2.vg
 
 TCLFILES = synth/bnn.tcl
 
-FIXED_TB = sys_defs.svh test_fixed_in_bin_weight.sv
-FIXED_SIM = fixed_in_bin_weight.sv
-FIXED_SYN = fixed_in_bin_weight.vg
+BIN_INPUT_TCLFILES = synth/bnn_input.tcl
+
+# FIXED_TB = sys_defs.svh testbench_idk.sv
+# FIXED_SIM = idk.sv
+# FIXED_SYN = fixed_in_bin_weight.vg
+# FIXED_TCL = synth/fixed.tcl
+
+FIXED_TB = sys_defs.svh tb_fcl_fp.sv
+FIXED_SIM = sys_defs.svh fcl_fp.sv
+FIXED_SYN = fcl_fp.vg
 FIXED_TCL = synth/fixed.tcl
 
 VTUBER = sys_defs.svh \
@@ -28,10 +35,25 @@ VTUBER = sys_defs.svh \
 
 VISFLAGS = -lncurses
 
-proposed_model_w_bin_v2.vg: $(SYNFILES) $(TCLFILES)
+fcl_fp.vg: $(FIXED_SIM) $(TCLFILES)
+	dc_shell -f $(FIXED_TCL) | tee fixed_synth.out
+
+idk.vg: $(FIXED_SIM) $(TCLFILES)
+	dc_shell -f $(FIXED_TCL) | tee fixed_synth.out
+
+binarization_input.vg:  $(SIMFILES) $(TCLFILES)
+	dc_shell-t -f $(BIN_INPUT_TCLFILES) | tee synth.out
+
+proposed_model_wo_bin_v2.vg: $(SIMFILES) $(TCLFILES)
 	dc_shell-t -f $(TCLFILES) | tee synth.out
 
-fixed_in_bin.vg: $(FIXED_SYN) $(TCLFILES)
+proposed_model_w_bin_v2.vg: $(SIMFILES) $(TCLFILES)
+	dc_shell-t -f $(TCLFILES) | tee synth.out
+
+fixed_in_bin_weight.vg: $(FIXED_SIM) $(TCLFILES)
+	dc_shell-t -f $(FIXED_TCL) | tee fixed_synth.out
+
+fixed_in_bin_weight_v2.vg: $(FIXED_SIM) $(TCLFILES)
 	dc_shell-t -f $(FIXED_TCL) | tee fixed_synth.out
 
 #####
@@ -59,14 +81,16 @@ syn:	syn_simv
 
 ## Fixed point
 fixed_simv:	$(FIXED_SIM) $(FIXED_TB)
-	$(VCS) $(FIXED_TB) $(FIXED_SIM) -o simv
+	$(VCS) $(FIXED_TB) $(FIXED_SIM) -o fixed_simv
 
 fixed_dve:	$(FIXED_SIM) $(FIXED_TB) 
 	$(VCS) +memcbk $(FIXED_TB) $(FIXED_SIM) -o dve -R -gui
 
-fixed_synth: $(FIXED_SIM) $(TCLFILES)
-	dc_shell-t -f $(TCLFILES) | tee fixed_synth.out
+fixed_synth: $(FIXED_SIM) $(FIXED_TCL)
+	dc_shell-t -f $(FIXED_TCL) | tee fixed_synth.out
 
+fixed_syn_dve: $(FIXED_SYN) $(FIXED_TB)
+	$(VCS) $(FIXED_TB) $(FIXED_SYN) $(LIB) -o fixed_syn_dve -R -gui
 
 fixed_syn_simv:	$(FIXED_SYN) $(FIXED_TB)
 	$(VCS) $(FIXED_TB) $(FIXED_SYN) $(LIB) -o fixed_syn_simv
