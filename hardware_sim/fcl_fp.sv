@@ -1,11 +1,14 @@
-module fp_PE(
+module fp_PE
+#(
+    parameter DATAWIDTH = 8
+)
+(    
     input clk,
     input rst,
     input signed [DATAWIDTH-1:0] INPUT,
     input signed [DATAWIDTH-1:0] W,
-    output logic signed [2*DATAWIDTH-1:0] S
+    output logic signed [DATAWIDTH-1:0] S
 );
-    parameter DATAWIDTH = 8;
     
     logic signed [2*DATAWIDTH-1:0] partial_mult;
     assign partial_mult = INPUT * W;
@@ -18,26 +21,25 @@ module fp_PE(
     end
 endmodule
 
-module fp_fcl(
+module fp_fcl
+(
     input clk,
     input rst,
-    input  signed [DATAWIDTH-1:0] INPUT,
-    input  signed [PARALLEL_NUM-1:0][DATAWIDTH-1:0] W,
-    output signed [PARALLEL_NUM-1:0][2*DATAWIDTH-1:0] OUTPUT
+    input  signed [7:0] INPUT,
+    input  signed [`FP_PARALLEL-1:0][7:0] W,
+    output signed [`FP_PARALLEL-1:0][7:0] OUTPUT
 );
-    parameter DATAWIDTH = 8;
-    parameter PARALLEL_NUM = 4;
     
     genvar i;
     generate
-        for(i = 0; i < PARALLEL_NUM; i++) begin
-            fp_PE #(.DATAWIDTH(DATAWIDTH)) PE (
+        for(i = 0; i < `FP_PARALLEL; i++) begin
+            fp_PE #(.DATAWIDTH(8)) PE (
                 .clk(clk),
                 .rst(rst),
                 .INPUT(INPUT),
                 .W(W[i]),
                 .S(OUTPUT[i])
-            )
+            );
         end
     endgenerate
 endmodule
