@@ -10,7 +10,7 @@
 
 
 `define FP_WIDTH 		8
-`define FP_PARALLEL 	8
+`define FP_PARALLEL 	16
 `define FP_MODEL_WIDTH 	784
 `define FP_CLOCK 		10
 

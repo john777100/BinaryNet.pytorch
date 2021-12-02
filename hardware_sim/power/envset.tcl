@@ -3,7 +3,7 @@
 #####################################################
 
 set CURRENT_PATH [pwd]
-set TOP_DESIGN proposed_model_w_bin_v2
+set TOP_DESIGN fcl_fp
 
 ## Add libraries below:
 set search_path [ list "/afs/umich.edu/class/eecs598a/f21/SAED32_EDK/lib/stdcell_rvt/db_ccs"]
@@ -12,9 +12,9 @@ set LINK_PATH [concat  "*" $target_library]
 
 ## Replace with your design names:
 set SDC_PATH      "$CURRENT_PATH/.."
-set STRIP_PATH    test_proposed_model_w_bin/dut
+set STRIP_PATH    tb_fcl_fp/dut
 
-set ACTIVITY_FILE ../proposed_model_w_bin.vcd
+set ACTIVITY_FILE ../fcl_fp.vcd
 
 ######## Timing Sections ########
 set START_TIME 0

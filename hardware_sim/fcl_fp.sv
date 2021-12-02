@@ -17,11 +17,11 @@ module fp_PE
         if(!rst)
             acc <= #1 partial_mult;
         else
-            acc <= #1 S + partial_mult;
+            acc <= #1 acc + partial_mult;
     end
 endmodule
 
-module fp_fcl
+module fcl_fp
 (
     input clk,
     input rst,
