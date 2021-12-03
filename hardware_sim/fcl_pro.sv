@@ -18,6 +18,7 @@ module pro_PE
     assign S = acc >> shift;
 
 	always_comb begin
+		/*
 		local_acc = 'b0
 		for (int i = 0; i < `PRO_CH_CNT; i++) begin
 			if(partial_xnor[i])
@@ -26,6 +27,26 @@ module pro_PE
 				local_acc = local_acc - 1;
 		end
 		actual_acc = local_acc[`PRO_WIDTH+1:1];
+	   	*/
+	   	assert(`PRO_CH_CNT == 4) else $error("LUT only for channel count == 4 use");
+		case(partial_xnor[i])
+			4'b0000:actual_acc = 3'b110;
+			4'b0001:actual_acc = 3'b111;
+			4'b0010:actual_acc = 3'b111;
+			4'b0011:actual_acc = 3'b000;
+			4'b0100:actual_acc = 3'b111;
+			4'b0101:actual_acc = 3'b000;
+			4'b0110:actual_acc = 3'b000;
+			4'b0111:actual_acc = 3'b001;
+			4'b1000:actual_acc = 3'b111;
+			4'b1001:actual_acc = 3'b000;
+			4'b1010:actual_acc = 3'b001;
+			4'b1011:actual_acc = 3'b001;
+			4'b1100:actual_acc = 3'b000;
+			4'b1101:actual_acc = 3'b001;
+			4'b1110:actual_acc = 3'b001;
+			4'b1111:actual_acc = 3'b010;
+		endcase
 	end
 
     always_ff @(posedge clk) begin
@@ -47,9 +68,9 @@ module fcl_pro
 );
   
 	logic [`PRO_CH_CNT-1:0]		BIN_INPUT;
-	logic [`PRO_WIDTH-1:0] 	negative_cnt;	// range 1 - 256 mapping to 0 - 255
+	logic [`PRO_WIDTH:0] 		negative_cnt;	// range 1 - 256 mapping to 0 - 255
 	always_comb begin
-		BIN_INPUT = 'b0-1;
+		BIN_INPUT = {`PRO_CH_CNT{1'b1}};
 		negative_cnt	= (`PRO_CH_CNT/2 - {INPUT[`PRO_WIDTH-1],INPUT}); // (256 - pixel * 2) >> 1 === 128 - pixel
 		BIN_INPUT = BIN_INPUT >> negative_cnt;
 	end
