@@ -68,6 +68,9 @@ pro_syn_simv:	$(PRO_SYN) $(PRO_TB)
 pro_syn:	pro_syn_simv
 	./pro_syn_simv | tee pro_syn_program.out
 
+pro_pp: pro_syn
+	make -C power pp_pro
+
 ## Fixed point
 fixed_simv:	$(FIXED_SIM) $(FIXED_TB)
 	$(VCS) $(FIXED_TB) $(FIXED_SIM) -o fixed_simv
@@ -89,6 +92,9 @@ fixed_syn_simv:	$(FIXED_SYN) $(FIXED_TB)
 
 fixed_syn:	fixed_syn_simv
 	./fixed_syn_simv | tee fixed_syn_program.out
+
+fixed_pp: fixed_syn
+	make -C power pp_fixed
 
 ## End of Fixed point
 
