@@ -14,13 +14,10 @@ module pro_PE
     logic signed [`PRO_WIDTH:0] 	actual_acc;
 	logic signed [`ACC_WIDTH-1:0] 	acc;
 
+	assign partial_xnor = {`PRO_CH_CNT{W}} ^~ INPUT;
     assign S = acc >> shift;
 
 	always_comb begin
-		if(W)
-			partial_xnor = INPUT;
-		else
-			partial_xnor = ~INPUT+1;
 		local_acc = 'b0
 		for (int i = 0; i < `PRO_CH_CNT; i++) begin
 			if(partial_xnor[i])
