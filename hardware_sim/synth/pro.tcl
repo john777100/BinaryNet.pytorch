@@ -15,7 +15,7 @@ elaborate fcl_pro -library work
 set design_name fcl_pro
 set clock_name clk
 set reset_name reset
-set CLK_PERIOD 1593
+set CLK_PERIOD 6.5
 
 
 

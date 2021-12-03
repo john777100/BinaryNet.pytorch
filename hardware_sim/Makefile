@@ -73,6 +73,9 @@ bin_syn:	bin_syn_simv
 pro_simv:	$(PRO_SIM) $(PRO_TB)
 	$(VCS) $(PRO_TB) $(PRO_SIM) -o pro_simv
 
+pro: pro_simv
+	./pro_simv
+
 pro_dve:	$(PRO_SIM) $(PRO_TB) 
 	$(VCS) +memcbk $(PRO_TB) $(PRO_SIM) -o pro_dve -R -gui
 
@@ -89,6 +92,9 @@ pro_syn:	pro_syn_simv
 ## Fixed point
 fixed_simv:	$(FIXED_SIM) $(FIXED_TB)
 	$(VCS) $(FIXED_TB) $(FIXED_SIM) -o fixed_simv
+
+fixed:	fixed_simv
+	./fixed_simv
 
 fixed_dve:	$(FIXED_SIM) $(FIXED_TB) 
 	$(VCS) +memcbk $(FIXED_TB) $(FIXED_SIM) -o dve -R -gui

@@ -18,7 +18,7 @@ set ACTIVITY_FILE ../fcl_fp.vcd
 
 ######## Timing Sections ########
 set START_TIME 0
-set	END_TIME 40850
+set	END_TIME 33354025
 ##### replace start and end time in pp.tcl
 set fp    [open pp.tcl r]
 set newfp [open pp.tset.tcl w]

@@ -17,9 +17,9 @@
 
 `define PRO_WIDTH 		2
 `define PRO_CH_CNT		4
-`define PRO_PARALLEL 	384
+`define PRO_PARALLEL 	16
 `define PRO_MODEL_WIDTH 784
-`define PRO_CLOCK 		1593
+`define PRO_CLOCK 		6.5
 
 `define BIN_PARALLEL 	8
 `define BIN_MODEL_WIDTH 784

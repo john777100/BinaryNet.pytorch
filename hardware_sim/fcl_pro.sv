@@ -29,7 +29,7 @@ module pro_PE
 		actual_acc = local_acc[`PRO_WIDTH+1:1];
 	   	*/
 	   	assert(`PRO_CH_CNT == 4) else $error("LUT only for channel count == 4 use");
-		case(partial_xnor[i])
+		case(partial_xnor)
 			4'b0000:actual_acc = 3'b110;
 			4'b0001:actual_acc = 3'b111;
 			4'b0010:actual_acc = 3'b111;
