@@ -18,7 +18,7 @@ module pro_PE
     assign S = acc >> shift;
 
 	always_comb begin
-		local_acc = 'b0
+		local_acc = 'b0;
 		for (int i = 0; i < `PRO_CH_CNT; i++) begin
 			if(partial_xnor[i])
 				local_acc = local_acc + 1;
@@ -36,7 +36,7 @@ module pro_PE
     end
 endmodule
 
-module pro_fcl
+module fcl_pro
 (
     input 												clk,
     input 												rst,
@@ -46,11 +46,11 @@ module pro_fcl
     output signed [`PRO_PARALLEL-1:0][`PRO_WIDTH-1:0] 	OUTPUT
 );
   
-	logic [`PRO_CH_CNT]		BIN_INPUT;
-	logic [`PRO_WIDTH:0] 	negative_cnt;	// range 1 - 256 mapping to 0 - 255
+	logic [`PRO_CH_CNT-1:0]		BIN_INPUT;
+	logic [`PRO_WIDTH-1:0] 	negative_cnt;	// range 1 - 256 mapping to 0 - 255
 	always_comb begin
 		BIN_INPUT = 'b0-1;
-		negative_cnt	= (PRO_CH_CNT/2 - {INPUT[`PRO_WIDTH-1],INPUT}); // (256 - pixel * 2) >> 1 === 128 - pixel
+		negative_cnt	= (`PRO_CH_CNT/2 - {INPUT[`PRO_WIDTH-1],INPUT}); // (256 - pixel * 2) >> 1 === 128 - pixel
 		BIN_INPUT = BIN_INPUT >> negative_cnt;
 	end
 	
@@ -60,7 +60,7 @@ module pro_fcl
             pro_PE  PE (
                 .clk(clk),
                 .rst(rst),
-                .INPUT(INPUT),
+                .INPUT(BIN_INPUT),
                 .W(W[i]),
                 .shift(shift),
 				.S(OUTPUT[i])
