@@ -10,12 +10,12 @@
 #/* new design                                              */
 #/***********************************************************/
 
-analyze -library work -f sverilog [list "sys_defs.svh" "fcl_fp.sv"]
-elaborate fcl_fp -library work
-set design_name fcl_fp 
+analyze -library work -f sverilog [list "sys_defs.svh" "fcl_pro.sv"]
+elaborate fcl_pro -library work
+set design_name fcl_pro
 set clock_name clk
 set reset_name reset
-set CLK_PERIOD 40850
+set CLK_PERIOD 1593
 
 
 

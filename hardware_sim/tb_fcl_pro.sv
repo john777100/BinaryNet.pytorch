@@ -12,7 +12,7 @@ module tb_fcl_pro ();
     logic	[`TEST_DATA_CNT-1:0][`INPUT_DIM-1:0][`BIT_CNT-1:0]		x;
 	logic	[3303:0][`PRO_PARALLEL-1:0][`PRO_WIDTH-1:0]                  weight;
 	logic	[`TEST_DATA_CNT-1:0][`OUTPUT_DIM-1:0][`BIT_CNT-1:0]	    y;
-    integer num_neuron  [0:4] = '{784, 16, 16, 16, 10}; // Model Config
+    integer num_neuron  [0:4] = '{784, 6144, 6144, 6144, 10}; // Model Config
     integer	error_cnt, file_x, file_y, file_weight;
     int i, layer, out, in, clk_num;
 
@@ -56,13 +56,13 @@ module tb_fcl_pro ();
 	//	$fclose(file_x);
 	//	$fclose(file_y);
 
-	for(i = 0; i < `TEST_DATA_CNT; i++) begin
-            for(int l = 0; l < num_neuron[0]; l++) pre_neuron[l] =  $urandom;
-            for(layer = 1; layer < $size(num_neuron); layer++) begin // loop through layer
+	//for(i = 0; i < `TEST_DATA_CNT; i++) begin
+        //    for(int l = 0; l < num_neuron[0]; l++) pre_neuron[l] =  $urandom;
+        //    for(layer = 1; layer < $size(num_neuron); layer++) begin // loop through layer
                 rst = 0;
                 shift = $urandom;
-                for(out = 0; out < num_neuron[layer]/`PRO_PARALLEL; out ++) begin // loop through output neuron
-                    for(in = 0; in < num_neuron[layer-1]; in++) begin // loop through input neuron
+        //        for(out = 0; out < num_neuron[layer]/`PRO_PARALLEL; out ++) begin // loop through output neuron
+        //            for(in = 0; in < num_neuron[layer-1]; in++) begin // loop through input neuron
                         INPUT = pre_neuron[in];
                         for(int w = 0; w < `PRO_PARALLEL; w++) begin
                             // $fscanf(file_weight, "%b", W[w]);
@@ -73,12 +73,12 @@ module tb_fcl_pro ();
                             rst = 1;
                         end
                         @(posedge clk);
-                    end
-                    hidden_neuron[out] = OUTPUT;
-                end
-                pre_neuron = hidden_neuron;
-            end
-		end
+        //            end
+        //            hidden_neuron[out] = OUTPUT;
+        //        end
+        //        pre_neuron = hidden_neuron;
+        //    end
+	//	end
 		$display("Total %d error in %d testing data",error_cnt,`TEST_DATA_CNT);
 		$fclose(file_weight);
 		$finish;

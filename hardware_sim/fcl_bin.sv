@@ -24,7 +24,7 @@ module bin_PE
     end
 endmodule
 
-module bin_fcl
+module fcl_bin
 (
     input clk,
     input rst,

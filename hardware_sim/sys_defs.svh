@@ -1,4 +1,4 @@
-`define TEST_DATA_CNT 50
+`define TEST_DATA_CNT 1
 `define BIT_CNT 	8
 `define CHANNEL_CNT	256
 `define INPUT_DIM	10
@@ -12,16 +12,16 @@
 `define FP_WIDTH 		8
 `define FP_PARALLEL 	16
 `define FP_MODEL_WIDTH 	784
-`define FP_CLOCK 		10
+`define FP_CLOCK 		40850
 
 
 `define PRO_WIDTH 		2
 `define PRO_CH_CNT		4
-`define PRO_PARALLEL 	8
+`define PRO_PARALLEL 	384
 `define PRO_MODEL_WIDTH 784
-`define PRO_CLOCK 		10
+`define PRO_CLOCK 		1593
 
 `define BIN_PARALLEL 	8
 `define BIN_MODEL_WIDTH 784
-`define BIN_CLOCK 		10
+`define BIN_CLOCK 		21611
 

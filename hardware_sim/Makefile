@@ -8,11 +8,15 @@ fixed: fixed_simv
 	./fixed_simv | tee fixed_program.out
 
 
-TESTBENCH = sys_defs.svh test_proposed_model_w_bin.sv
-SIMFILES = binarization_input.sv accumulation_w_add_1.sv proposed_model_w_bin_v2.sv
-SYNFILES = proposed_model_w_bin_v2.vg
+PRO_TB  = sys_defs.svh 	tb_fcl_pro.sv
+PRO_SIM = fcl_pro.sv
+PRO_SYN = fcl_pro.vg
+PRO_TCL = synth/pro.tcl
 
-TCLFILES = synth/bnn.tcl
+BIN_TB  = sys_defs.svh tb_fcl_bin.sv
+BIN_SIM = fcl_bin.sv
+BIN_SYN = fcl_bin.vg
+BIN_TCL = synth/bnn.tcl
 
 BIN_INPUT_TCLFILES = synth/bnn_input.tcl
 
@@ -35,49 +39,52 @@ VTUBER = sys_defs.svh \
 
 VISFLAGS = -lncurses
 
-fcl_fp.vg: $(FIXED_SIM) $(TCLFILES)
+fcl_fp.vg: $(FIXED_SIM) $(FIXED_TCL)
 	dc_shell -f $(FIXED_TCL) | tee fixed_synth.out
 
-idk.vg: $(FIXED_SIM) $(TCLFILES)
-	dc_shell -f $(FIXED_TCL) | tee fixed_synth.out
+fcl_bin.vg: $(BIN_SIM) $(BIN_TCL)
+	dc_shell -f $(BIN_TCL) | tee bin_synth.out
 
-binarization_input.vg:  $(SIMFILES) $(TCLFILES)
-	dc_shell-t -f $(BIN_INPUT_TCLFILES) | tee synth.out
-
-proposed_model_wo_bin_v2.vg: $(SIMFILES) $(TCLFILES)
-	dc_shell-t -f $(TCLFILES) | tee synth.out
-
-proposed_model_w_bin_v2.vg: $(SIMFILES) $(TCLFILES)
-	dc_shell-t -f $(TCLFILES) | tee synth.out
-
-fixed_in_bin_weight.vg: $(FIXED_SIM) $(TCLFILES)
-	dc_shell-t -f $(FIXED_TCL) | tee fixed_synth.out
-
-fixed_in_bin_weight_v2.vg: $(FIXED_SIM) $(TCLFILES)
-	dc_shell-t -f $(FIXED_TCL) | tee fixed_synth.out
+fcl_pro.vg: $(PRO_SIM) $(PRO_TCL)
+	dc_shell -f $(PRO_TCL) | tee pro_synth.out
 
 #####
 # Should be no need to modify after here
 #####
 
 ## Binary
-simv:	$(SIMFILES) $(TESTBENCH)
-	$(VCS) $(TESTBENCH) $(SIMFILES) -o simv
+bin_simv:	$(BIN_SIM) $(BIN_TB)
+	$(VCS) $(BIN_TB) $(BIN_SIM) -o bin_simv
 
-dve:	$(SIMFILES) $(TESTBENCH) 
-	$(VCS) +memcbk $(TESTBENCH) $(SIMFILES) -o dve -R -gui
+bin_dve:	$(BIN_SIM) $(BIN_TB) 
+	$(VCS) +memcbk $(BIN_TB) $(BIN_SIM) -o bin_dve -R -gui
 
-.PHONY: dve
-
-synth: $(SIMFILES) $(TCLFILES)
-	dc_shell-t -f $(TCLFILES) | tee synth.out
+bin_synth: $(BIN_SIM) $(BIN_TCL)
+	dc_shell-t -f $(BIN_TCL) | tee synth.out
 
 
-syn_simv:	$(SYNFILES) $(TESTBENCH)
-	$(VCS) $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv
+bin_syn_simv:	$(BIN_SYN) $(BIN_TB)
+	$(VCS) $(BIN_TB) $(BIN_SYN) $(LIB) -o bin_syn_simv
 
-syn:	syn_simv
-	./syn_simv | tee syn_program.out
+bin_syn:	bin_syn_simv
+	./bin_syn_simv | tee bin_syn_program.out
+
+## Proposed
+pro_simv:	$(PRO_SIM) $(PRO_TB)
+	$(VCS) $(PRO_TB) $(PRO_SIM) -o pro_simv
+
+pro_dve:	$(PRO_SIM) $(PRO_TB) 
+	$(VCS) +memcbk $(PRO_TB) $(PRO_SIM) -o pro_dve -R -gui
+
+pro_synth: $(PRO_SIM) $(PRO_TCL)
+	dc_shell-t -f $(PRO_TCL) | tee synth.out
+
+
+pro_syn_simv:	$(PRO_SYN) $(PRO_TB)
+	$(VCS) $(PRO_TB) $(PRO_SYN) $(LIB) -o pro_syn_simv
+
+pro_syn:	pro_syn_simv
+	./pro_syn_simv | tee pro_syn_program.out
 
 ## Fixed point
 fixed_simv:	$(FIXED_SIM) $(FIXED_TB)

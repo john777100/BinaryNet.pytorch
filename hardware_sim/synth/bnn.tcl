@@ -10,10 +10,10 @@
 #/* new design                                              */
 #/***********************************************************/
 
-analyze -library work -f sverilog [list "sys_defs.svh" "binarization_input.sv" "accumulation_w_add_1.sv" "proposed_model_w_bin_v2.sv"]
-elaborate proposed_model_w_bin_v2 -library work
-set design_name proposed_model_w_bin_v2
-set clock_name clock
+analyze -library work -f sverilog [list "sys_defs.svh" "fcl_bin.sv"]
+elaborate fcl_bin -library work
+set design_name fcl_bin
+set clock_name clk
 set reset_name reset
 set CLK_PERIOD 10
 
