@@ -1,13 +1,6 @@
 VCS = SW_VCS=2017.12-SP2-1 vcs -sverilog +vc -Mupdate -line -full64 +define+
 LIB = /afs/umich.edu/class/eecs598a/f21/SAED32_EDK/lib/stdcell_rvt/verilog/saed32nm.v
 
-all:	simv
-	./simv | tee program.out
-
-fixed: fixed_simv
-	./fixed_simv | tee fixed_program.out
-
-
 PRO_TB  = sys_defs.svh 	tb_fcl_pro.sv
 PRO_SIM = fcl_pro.sv
 PRO_SYN = fcl_pro.vg
@@ -18,24 +11,10 @@ BIN_SIM = fcl_bin.sv
 BIN_SYN = fcl_bin.vg
 BIN_TCL = synth/bnn.tcl
 
-BIN_INPUT_TCLFILES = synth/bnn_input.tcl
-
-# FIXED_TB = sys_defs.svh testbench_idk.sv
-# FIXED_SIM = idk.sv
-# FIXED_SYN = fixed_in_bin_weight.vg
-# FIXED_TCL = synth/fixed.tcl
-
 FIXED_TB = sys_defs.svh tb_fcl_fp.sv
 FIXED_SIM = sys_defs.svh fcl_fp.sv
 FIXED_SYN = fcl_fp.vg
 FIXED_TCL = synth/fixed.tcl
-
-VTUBER = sys_defs.svh \
-		 ISA.svh \
-		 testbench/mem.sv \
-		 testbench/visual_testbench_RS.sv \
-		 testbench/visual_c_hooks_rob.cpp \
-		 testbench/pipe_print.c \
 
 VISFLAGS = -lncurses
 
